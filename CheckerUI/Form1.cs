@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,6 +29,7 @@ namespace CheckerUI
         bool isShowingMessage = false;
         bool isLocked = false;
         bool isTurn = false;
+        bool prevIsTurn = false;
         dynamic lastSummary;
 
         public Form1()
@@ -294,10 +296,20 @@ namespace CheckerUI
                     listViewPlayers.Items.Add(it);
                 }
                 isTurn = resp.info.summary.isturn;
+                if(isTurn && !prevIsTurn)
+                {
+                    playSound();
+                }
                 modifyUIForPlay();
+                prevIsTurn = isTurn;
             }
             else
                 broadcastError(resp);
+        }
+
+        private void playSound()
+        {
+            SystemSounds.Exclamation.Play();
         }
 
         async void move()
